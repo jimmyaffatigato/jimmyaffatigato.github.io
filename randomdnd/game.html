@@ -24,6 +24,7 @@
     <script src="randomwords.js"></script>
     <script src="dnd.js"></script>
     <script src="dndarrays.js"></script>
+    <script src="midistuff.js"></script>
     <script>
         char.randomize();
         char.calc();
@@ -33,7 +34,7 @@
             hp.innerHTML = "HP: " + char.hp;
             ac.innerHTML = "AC: " + char.ac
             abilities.innerHTML =
-                "Strength: " + char.abilities.str + " ("+char.abilities.strMod+")"+"<br>"+
+                "Strength: " + char.abilities.str + " (" + char.abilities.strMod + ")"+"<br>"+
                 "Dexterity: " + char.abilities.dex + " ("+char.abilities.dexMod+")"+"<br>"+
                 "Constitution: " + char.abilities.con + " ("+char.abilities.conMod+")"+"<br>"+
                 "Intelligence: " + char.abilities.int + " ("+char.abilities.intMod+")"+"<br>"+
@@ -41,13 +42,12 @@
                 "Charisma: " + char.abilities.cha + " ("+char.abilities.chaMod+")"
             weapon.innerHTML = char.weapon.name + " (d"+char.weapon.damage+")"
             armor.innerHTML = char.armor.name;
-            for (var y in char.spells) {
+            /*for (var y in char.spells) {
                 var tex = document.createTextNode(char.spells[y].name + " ("+char.spells[y].level+")")
                 document.getElementById("spells").appendChild(tex);
                 document.getElementById("spells").appendChild(document.createElement("BR"))
-            }
+            }*/
         }
         go()
-        console.log(char)
     </script>
 </html>

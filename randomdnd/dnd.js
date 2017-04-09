@@ -206,12 +206,13 @@ function abilityRoll() {
     var roll = 0;
     var dice = [d(6),d(6),d(6),d(6)];dice.sort();dice.splice(0,1);
     for (var i in dice) {roll+=dice[i]}
-    return roll;
+    return parseInt(roll);
 }
 
 function mod(att) {
-    var out = (((att - 10) - (att % 2)) / 2)
-    return out
+    var out = 0;
+    out = (((att - 10) - (att % 2)) / 2);
+    return out;
 }
 
 function RandomWeapon() {
