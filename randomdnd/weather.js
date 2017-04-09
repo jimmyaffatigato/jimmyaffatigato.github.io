@@ -1,0 +1,47 @@
+weather = {
+    "coord":
+        {
+            "lon":-73.87,
+            "lat":42.69
+        },
+    "weather":
+        [
+            {
+                "id":800,
+                "main":"Clear",
+                "description":"clear sky",
+                "icon":"01d"
+            }
+        ],
+    "base":"stations",
+    "main":
+        {
+            "temp":288.58,
+            "pressure":1019,
+            "humidity":23,
+            "temp_min":287.15,
+            "temp_max":290.15
+        },
+    "visibility":16093,
+    "wind":
+        {
+            "speed":4.6,
+            "deg":260,
+            "gust":7.2
+        },
+    "clouds":
+        {"all":1},
+    "dt":1491760440,
+    "sys":
+        {
+            "type":1,
+            "id":2898,
+            "message":0.1731,
+            "country":"US",
+            "sunrise":1491733341,
+            "sunset":1491780712
+        },
+    "id":5144097,
+    "name":"Westmere",
+    "cod":200
+}

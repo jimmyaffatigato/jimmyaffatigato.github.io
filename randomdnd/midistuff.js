@@ -71,7 +71,8 @@ function openMIDI() {
                 filterQ: 20,
                 LFOOnOff : true,
                 lfoSpeed: 0.5,
-                lfoType : "square"
+                lfoType : "square",
+                calc: function() {}
             },
             {
                 num:1,
@@ -81,15 +82,88 @@ function openMIDI() {
                 pitchAttack: randomInt(0,25,"little") / 1000,
                 decay: Math.random() * Math.random(),
                 filterQ: randomInt(1,25),
-                lfoOnOff : randomInt(0,1),
+                lfoOnOff: randomInt(0,1),
                 lfoSpeed: Math.random() * randomInt(1,10),
-                lfoType : randomWave()
+                lfoType: randomWave(),
+                distortionOnOff: randomInt(0,1),
+                distortion: Math.random() * randomInt(0, 3) + 2,
+                calc: function() { }
+            },
+            {
+                num:2,
+                name:"Character",
+                waveType: "sine",
+                filterAttack: 0,
+                pitchAttack: 0,
+                decay: 0,
+                filterQ: 0,
+                lfoOnOff : 0,
+                lfoSpeed: 0,
+                lfoType : "sine",
+                calc: function() {
+                    presets[2].waveType = randomWave();
+                    presets[2].filterAttack = 15/char.abilities.cha
+                    presets[2].pitchAttack = char.abilities.int / 1000
+                    presets[2].decay = char.hp/50
+                    presets[2].filterQ = char.abilities.str
+                    presets[2].lfoOnOff = randomInt(0,1)
+                    presets[2].lfoSpeed = char.abilities.dex
+                    presets[2].lfoType = randomWave()
+                }
+            },
+            {
+                num:3,
+                name:"Environment",
+                waveType: "sine",
+                filterAttack: 0,
+                pitchAttack: 0,
+                decay: 0,
+                filterQ: 0,
+                lfoOnOff : 0,
+                lfoSpeed: 0,
+                lfoType : "sine",
+                calc: function() {
+                    var date = new Date();
+                    presets[3].waveType = randomWave();
+                    presets[3].filterAttack = date.getHours()/24
+                    presets[3].pitchAttack = date.getHours()/24
+                    presets[3].decay = date.getHours()/24
+                    presets[3].filterQ = date.getHours();
+                    presets[3].lfoOnOff = 1;
+                    presets[3].lfoSpeed = date.getHours()/24
+                    presets[3].lfoType = randomWave()
+                }
             }
         ]
         var au = new AudioContext();
         var notesOn = [];
         var preset = presets[1]
-        console.log("Preset: " + preset.name)
+        var a = document.getElementById("a")
+        var b = document.getElementById("b")
+        var c = document.getElementById("c")
+        var d = document.getElementById("d")
+        var e = document.getElementById("e")
+        var f = document.getElementById("f")
+        var g = document.getElementById("g")
+        var h = document.getElementById("h")
+        function show() {
+            a.innerHTML = "Wave: " + preset.waveType.capitalize();
+            b.innerHTML = "Filter Attack: " + preset.filterAttack.toFixed(1);
+            c.innerHTML = "Pitch Attack: " + (preset.pitchAttack * 100).toFixed(1);
+            d.innerHTML = "Decay: " + (preset.decay).toFixed(1);
+            console.log(preset.decay)
+            e.innerHTML = "Filter Q: " + preset.filterQ;
+            if (preset.distortionOnOff == 1) {
+                f.innerHTML = "Distortion: x" + parseFloat(preset.distortion).toFixed(1)
+            }
+            if (preset.lfoOnOff == 1) {
+                g.innerHTML = "LFO Speed: " + preset.lfoSpeed.toFixed(1) + "Hz";
+                h.innerHTML = "LFO Wave: " + preset.lfoType.capitalize()
+            }
+        }
+        preset.calc()
+        show()
+        console.log("Preset: ", preset)
         var waveType = preset.waveType;
         var filterAttack = preset.filterAttack;
         var pitchAttack = preset.pitchAttack;
@@ -99,6 +173,10 @@ function openMIDI() {
         var lfoSpeed = preset.lfoSpeed;
         var lfoType = preset.lfoType;
         var bend = 0.0;
+        var distortion = 1
+        if (preset.distortionOnOff == 1) {
+            distortion = preset.distortion
+        };
         function Voice(note, vel) {
             this.note = note;
             var osc = new OscillatorNode(au)
@@ -129,7 +207,7 @@ function openMIDI() {
             env.gain.value = vel / 255;
             env.gain.setTargetAtTime(((vel/255)/1.25),au.currentTime,.25)
             lfoGain.gain.value = vel / 255
-            oscGain.gain.value = vel /255
+            oscGain.gain.value = (vel /255) * distortion
             osc.connect(fil);
             fil.connect(oscGain)
             oscGain.connect(env)
