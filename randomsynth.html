@@ -1,6 +1,16 @@
 <html>
     <head>
         <style>
+            @font-face {
+                font-family: futura;
+                src: url(FuturaStd-Book.otf);
+                font-weight:60;
+            }
+            * {
+                font-family: futura;
+                padding:0;
+                margin:0;
+            }
             h1 {
                 font-size: 18pt;
                 display: inline-block;
@@ -14,54 +24,125 @@
             select {
                 font-size: 18pt;
             }
+            #leftBox {
+                display: inline-block;
+                position: absolute;
+                width: 25vw;
+                height: 100%;
+                background-color: blue;
+                padding:1vw;
+            }
+            #rightBox {
+                display: inline-block;
+                position: absolute;
+                left:25vw;
+                width: 25vw;
+                height: 100%;
+                background-color: cyan;
+                padding:1vw;
+            }
+            #settingNames {
+                display: inline-block;
+                left:0;
+                text-align: right;
+            }
+            #settingValues {
+                display: inline-block;
+                right:0;
+                text-align: left;
+            }
         </style>
     </head>
     <body>
-        <h1>Wave:</h1>
-        <select id="oscType">
-            <option value="sine">Sine</option>
-            <option value="sawtooth">Sawtooth</option>
-            <option value="square">Square</option>
-            <option value="triangle">Triangle</option>
+        <div id="leftBox">
+            <h1>Wave:</h1><br>
+            <select id="oscType">
+                <option value="sine">Sine</option>
+                <option value="sawtooth">Sawtooth</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+            </select><br><br>
+            <h1>Pitch Attack:</h1><br>
+            <input id="pAT" size="7" onchange="changeValues()"></input>
+            <select id="pitchAttackType" onchange="changeValues()">
+                <option value="high">High</option>
+                <option value="low">Low</option>
+                <option value="port">Portamento</option>
+            </select><br><br>
+            <h1>Filter Attack:</h1><br>
+            <input id="fAT" size="7" onchange="changeValues()"></input><input id="fAV" size="7" onchange="changeValues()"></input><br>
+            <h1>Filter Decay:</h1><br>
+            <input id="fDT" size="7" onchange="changeValues()"></input><input id="fDV" size="7" onchange="changeValues()"></input><br>
+            <h1>Filter Sustain:</h1><br>
+            <input id="fST" size="7" onchange="changeValues()"></input><input id="fSV" size="7" onchange="changeValues()"></input><br>
+            <h1>Filter Release:</h1><br>
+            <input id="fRT" size="7" onchange="changeValues()"></input><input id="fRV" size="7" onchange="changeValues()"></input><br>
+            <h1>Filter Q:</h1><br>
+            <input id="fQ" size="7" onchange="changeValues()"></input><br><br>
+            <h1>Volume Attack:</h1><br>
+            <input id="vAT" size="7" onchange="changeValues()"></input><input id="vAV" size="7" onchange="changeValues()"></input><br>
+            <h1>Volume Decay:</h1><br>
+            <input id="vDT" size="7" onchange="changeValues()"></input><input id="vDV" size="7" onchange="changeValues()"></input><br>
+            <h1>Volume Sustain:</h1><br>
+            <input id="vST" size="7" onchange="changeValues()"></input><input id="vSV" size="7" onchange="changeValues()"></input><br>
+            <h1>Volume Release:</h1><br>
+            <input id="vRT" size="7" onchange="changeValues()"></input><input disabled id="vRV" size="7" onchange="changeValues()"></input>
+        </div>
+        <div id="rightBox">
+        <h1>LFO:</h1>
+        <input id="lfoOnOff" type="checkbox" onchange="changeValues()"></input><br><br>
+        <h1>LFO Mode:</h1><br>
+        <select id="lfoMode" onchange="changeValues()">
+            <option value="vol">Volume</option>
+            <option value="fil">Filter</option>
+            <option value="pitch">Pitch</option>
+            <option value="pan">Pan</option>
         </select><br>
-        <h1>Filter Attack:&nbsp</h1>
-        <input id="fAT" size="1" onchange="changeValues()"></input><input id="fAV" size="4" onchange="changeValues()"></input><br>
-        <h1>Filter Decay:&nbsp</h1>
-        <input id="fDT" size="1" onchange="changeValues()"></input><input id="fDV" size="4" onchange="changeValues()"></input><br>
-        <h1>Filter Sustain:&nbsp</h1>
-        <input id="fST" size="1" onchange="changeValues()"></input><input id="fSV" size="4" onchange="changeValues()"></input><br>
-        <h1>Filter Release:&nbsp</h1>
-        <input id="fRT" size="1" onchange="changeValues()"></input><input id="fRV" size="4" onchange="changeValues()"></input><br>
-        <h1>Filter Q:&nbsp</h1>
-        <input id="fQ" size="1" onchange="changeValues()"></input>
-        <br>
-        <h1>Volume Attack:&nbsp</h1>
-        <input id="vAT" size="1" onchange="changeValues()"></input><input id="vAV" size="1" onchange="changeValues()"></input><br>
-        <h1>Volume Decay:&nbsp</h1>
-        <input id="vDT" size="1" onchange="changeValues()"></input><input id="vDV" size="1" onchange="changeValues()"></input><br>
-        <h1>Volume Sustain:&nbsp</h1>
-        <input id="vST" size="1" onchange="changeValues()"></input><input id="vSV" size="1" onchange="changeValues()"></input><br>
-        <h1>Volume Release:&nbsp</h1>
-        <input id="vRT" size="1" onchange="changeValues()"></input><input id="vRV" size="1" onchange="changeValues()"></input>
-        <br>
-        <h1>LFO:&nbsp</h1>
-        <input id="lfoOnOff" type="checkbox" onchange="changeValues()"></input><br>
-        <h1>LFO Type:&nbsp</h1>
+        <h1>LFO Type:</h1><br>
         <select id="lfoType" onchange="changeValues()">
             <option value="sine">Sine</option>
             <option value="sawtooth">Sawtooth</option>
             <option value="square">Square</option>
             <option value="triangle">Triangle</option>
         </select><br>
-        <h1>LFO Speed:&nbsp</h1>
-        <input size="2" id="lfoSpeed" onchange="changeValues()"></input><br>
-        <h1>LFO Depth:&nbsp</h1>
-        <input size="1" id="lfoDepth" onchange="changeValues()"></input><br>
+        <h1>LFO Speed:</h1><br>
+        <input size="7" id="lfoSpeed" onchange="changeValues()"></input>
+        <input checked id="hzCheck" type="radio" name="hzOrBpm" onchange="changeSpeed()"></input><h1>Hz</h1>
+        <input type="radio" value="hz" name="hzOrBpm" onchange="changeSpeed()"></input><h1>BPM</h1><br>
+        <h1>LFO Depth:</h1><br>
+        <input size="7" id="lfoDepth" onchange="changeValues()"></input><br><br>
+        <h1>Pitch Wheel:</h1><br>
+            <select>
+                <option>LFO Speed</option>
+                <option>LFO Depth</option>
+                <option>Volume</option>
+                <option>Filter Frequency</option>
+                <option>Pitch Bend</option>
+            </select>
+        <h1>Mod Wheel:</h1>
+            <select>
+                <option>LFO Speed</option>
+                <option>LFO Depth</option>
+                <option>Volume</option>
+                <option>Filter Frequency</option>
+                <option>Pitch Bend</option>
+            </select><br>
+        <h1>Volume Knob:</h1>
+            <select>
+                <option>LFO Speed</option>
+                <option>LFO Depth</option>
+                <option>Volume</option>
+                <option>Filter Frequency</option>
+                <option>Pitch Bend</option>
+            </select>
         <textarea rows="6" cols="50" id="settings" style="height:10vw;visibility: hidden" onchange="loadSettings()"></textarea>
+        </div>
     </body>
     <script src="myLibrary.js"></script>
-    <script src="midistuff.js"></script>
-    <script src="weather.js"></script>
+    <script src="midi.js"></script>
+    <script src="presets.js"></script>
+    <script src="synth.js"></script>
+    <script src="keyboardevents.js"></script>
     <script>
 
     </script>
