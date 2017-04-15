@@ -92,9 +92,33 @@ function openMIDI() {
                 case 176:
                     //Mod Wheel
                     if (data[1] == 1) {
-                        bend = data[2]/127
-                        for (notes=0;notes<notesOn.length;notes++) {
-                            notesOn[notes].osc1.frequency.setTargetAtTime(notesOn[notes].freq * (bend + 1), au.currentTime, 0)
+                        switch (pre.modWheel) {
+                            case "pitch":
+                                bend = data[2]/127
+                                for (notes=0;notes<notesOn.length;notes++) {
+                                    notesOn[notes].osc1.frequency.setTargetAtTime(notesOn[notes].freq * (bend + 1), au.currentTime, 0)
+                                }
+                                break;
+                            case "speed":
+                                speedMult = data[2]/64
+                                for (notes=0;notes<notesOn.length;notes++) {
+                                    notesOn[notes].lfo1.frequency.setTargetAtTime(pre.lfo1Speed * speedMult, au.currentTime, 0)
+                                }
+                                break;
+                            break;
+                            case "depth":
+                                depthMult = data[2]/64
+                                for (notes=0;notes<notesOn.length;notes++) {
+                                    notesOn[notes].lfo1Gain.gain.setTargetAtTime(pre.lfo1Depth * depthMult, au.currentTime, 0)
+                                }
+                                break;
+                            case "vol":
+                                pre.volControl = data[2]/127
+                                for (notes=0;notes<notesOn.length;notes++) {
+                                    notesOn[notes].volControl.gain.setTargetAtTime(pre.volControl, au.currentTime, 0)
+                                }
+                                break;
+                            case "fil":break;
                         }
                     }
                     if (data[1] == 7) {

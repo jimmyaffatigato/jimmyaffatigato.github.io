@@ -111,28 +111,28 @@
         <input size="7" id="lfoDepth" onchange="changeValues()"></input><br><br>
         <h1>Pitch Wheel:</h1><br>
             <select>
+                <option>Pitch Bend</option>
                 <option>LFO Speed</option>
                 <option>LFO Depth</option>
                 <option>Volume</option>
                 <option>Filter Frequency</option>
-                <option>Pitch Bend</option>
             </select>
         <h1>Mod Wheel:</h1>
-            <select>
-                <option>LFO Speed</option>
-                <option>LFO Depth</option>
-                <option>Volume</option>
-                <option>Filter Frequency</option>
-                <option>Pitch Bend</option>
+            <select id="modWheel" onchange="changeValues()">
+                <option value="speed">LFO Speed</option>
+                <option value="depth">LFO Depth</option>
+                <option value="vol">Volume</option>
+                <option value="fil">Filter Frequency</option>
+                <option value="pitch">Pitch Bend</option>
             </select><br>
         <h1>Volume Knob:</h1>
             <select>
+                <option>Volume</option>
                 <option>LFO Speed</option>
                 <option>LFO Depth</option>
-                <option>Volume</option>
                 <option>Filter Frequency</option>
                 <option>Pitch Bend</option>
-            </select><br>
+            </select><br><br>
         <h1>Device:</h1><br>
             <select id="devices">
             </select>

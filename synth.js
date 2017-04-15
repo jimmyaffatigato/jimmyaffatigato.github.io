@@ -19,6 +19,8 @@ var pre = presets[1]
 var port = 0;
 //Pitch Bend
 var bend = 0;
+var speedMult = 1;
+var depthMult = 1;
 //Voice Constructor
 function Voice(note, vel) {
     var voice = this
@@ -85,8 +87,8 @@ function Voice(note, vel) {
     this.lfo1Gain = new GainNode(au);
     this.lfo1OnOff = pre.lfo1OnOff;
     this.lfo1.type = pre.lfo1Type;
-    this.lfo1.frequency.value = pre.lfo1Speed;
-    this.lfo1Gain.gain.value = pre.lfo1Depth;
+    this.lfo1.frequency.value = pre.lfo1Speed * speedMult;
+    this.lfo1Gain.gain.value = pre.lfo1Depth * depthMult;
 
     //Connections
     this.osc1.connect(this.osc1Gain);
@@ -178,7 +180,8 @@ function show() {
     lfoType.value = pre.lfo1Type;
     //LFO Mode
     lfoMode.value = pre.lfoMode
-    lfoSpeed.value = pre.lfo1Speed;
+    //LFO Speed
+    lfoSpeed.value = pre.lfo1Speed + " Hz";
     //LFO Depth
     lfoDepth.value = parseFloat(pre.lfo1Depth)+ "x"
     //Turn preset object into string and print to text box
@@ -210,10 +213,15 @@ function changeValues() {
     //LFO Wave Type
     pre.lfo1Type = lfoType.value;
 
-    pre.lfo1Speed = lfoSpeed.value;
+    //LFO Speed
+    pre.lfo1Speed = parseFloat(lfoSpeed.value);
 
     //LFO Depth
-    pre.lfo1Depth = parseFloat(lfoDepth.value);
+    pre.lfo1Depth = parseFloat(lfoDepth.value) / depthMult;
+
+    //Mod Wheel Assign
+    pre.modWheel = modWheel.value;
+
     show()
 }
 show()
@@ -241,6 +249,3 @@ if (code.length > 0) {
 document.body.style.backgroundColor = randomColor();
 leftBox.style.backgroundColor = randomColor();
 rightBox.style.backgroundColor = randomColor();
-
-
-var hzOrBpm = document.getElementsByName("hzOrBpm")
