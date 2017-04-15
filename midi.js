@@ -45,25 +45,23 @@ function openMIDI() {
     if (navigator.requestMIDIAccess) {
         navigator.requestMIDIAccess({
             sysex: false
-        }).then(midiContext, midiFail);
+        }).then(midiContext);
     }
     //I don't really know how this part works
     function midiContext(MIDIAccess) {
         midi = MIDIAccess;
-        //Initialize the input and output variable in this scope
-        var input, output;
-        //If there is an input present, default to Port 0; If there are multiple devices, it's still Port 0.
-        if (midi.inputs.size > 0) {
-            input = midi.inputs.get(0)
-            input.onmidimessage = onMIDIMessage;
-            console.log("MIDI Device: " + input.manufacturer + " " + input.name)
+        inputs = []
+        for (h=0;h<9;h++){
+            if (midi.inputs.get(h) != undefined) {
+                var tex = document.createTextNode(midi.inputs.get(h).name)
+                var opt = document.createElement("OPTION")
+                opt.setAttribute("value",h)
+                opt.appendChild(tex)
+                devices.appendChild(opt)
+            }
         }
-        else {
-            console.log("No MIDI devices present. Try refreshing (F5)")
-        }
-        //MIDI output defaults to Port 0 also
-        if (midi.outputs.size > 0) {
-            output = midi.outputs.get(0)
+        var input = midi.inputs.get(devices.value)
+        input.onmidimessage = onMIDIMessage;
         }
         //Called when a MIDI message is received
         function onMIDIMessage(event) {
@@ -110,15 +108,6 @@ function openMIDI() {
                     break;
             }
         }
-        function sendANote(note) {
-            var noteOnMessage = [144, note, 99];
-            output.send( noteOnMessage );
-            output.send( [128, note, 0], window.performance.now() + 50.0 );  
-        }
     }
-    function midiFail() {
-        console.log("This browser does not support MIDI devices")
-    }
-}
 openMIDI();
 

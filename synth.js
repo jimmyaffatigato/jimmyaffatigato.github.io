@@ -85,7 +85,7 @@ function Voice(note, vel) {
     this.lfo1Gain = new GainNode(au);
     this.lfo1OnOff = pre.lfo1OnOff;
     this.lfo1.type = pre.lfo1Type;
-    this.lfo1.frequency.value = pre.lfo1Speed.hz;
+    this.lfo1.frequency.value = pre.lfo1Speed;
     this.lfo1Gain.gain.value = pre.lfo1Depth;
 
     //Connections
@@ -152,50 +152,38 @@ function show() {
     //Osc Type
     oscType.value = pre.osc1Type;
     //Pitch Attack
-    pAT.value = pre.p.a[1].toFixed(2)+"s";
+    pAT.value = parseFloat(pre.p.a[1])+"s";
     pitchAttackType.value = pre.pitchAttackType;
     //Filter Attack
-    fAT.value = pre.f.a[1].toFixed(2)+"s";fAV.value = pre.f.a[0].toFixed(0) + " Hz"
+    fAT.value = parseFloat(pre.f.a[1])+"s";fAV.value = parseFloat(pre.f.a[0]).toFixed(0) + " Hz"
     //Filter Decay
-    fDT.value = pre.f.d[1].toFixed(2)+"s";fDV.value = pre.f.d[0].toFixed(0) + " Hz"
+    fDT.value = parseFloat(pre.f.d[1])+"s";fDV.value = parseFloat(pre.f.d[0]).toFixed(0) + " Hz"
     //Filter Sustain
-    fST.value = pre.f.s[1].toFixed(2)+"s";fSV.value = pre.f.s[0].toFixed(0) + " Hz"
+    fST.value = parseFloat(pre.f.s[1])+"s";fSV.value = parseFloat(pre.f.s[0]).toFixed(0) + " Hz"
     //Filter Release
-    fRT.value = pre.f.r[1].toFixed(2)+"s";fRV.value = pre.f.r[0].toFixed(0) + " Hz"
+    fRT.value = parseFloat(pre.f.r[1])+"s";fRV.value = parseFloat(pre.f.r[0]).toFixed(0) + " Hz"
     //Filter Q
     fQ.value = pre.fQ;
     //Volume Attack
-    vAT.value = pre.v.a[1].toFixed(2)+"s";vAV.value = pre.v.a[0].toFixed(1) + "x"
+    vAT.value = parseFloat(pre.v.a[1])+"s";vAV.value = parseFloat(pre.v.a[0]).toFixed(1) + "x"
     //Volume Decay
-    vDT.value = pre.v.d[1].toFixed(2)+"s";vDV.value = pre.v.d[0].toFixed(1) + "x"
+    vDT.value = parseFloat(pre.v.d[1])+"s";vDV.value = parseFloat(pre.v.d[0]).toFixed(1) + "x"
     //Volume Sustain
-    vST.value = pre.v.s[1].toFixed(2)+"s";vSV.value = pre.v.s[0].toFixed(1) + "x"
+    vST.value = parseFloat(pre.v.s[1])+"s";vSV.value = parseFloat(pre.v.s[0]).toFixed(1) + "x"
     //Volume Release
-    vRT.value = pre.v.r[1].toFixed(2)+"s";vRV.value = pre.v.r[0].toFixed(1) + "x"
+    vRT.value = parseFloat(pre.v.r[1])+"s";vRV.value = parseFloat(pre.v.r[0]).toFixed(1) + "x"
     //LFO Switch
     lfoOnOff.checked = pre.lfo1OnOff;
     //LFO Wave Type
     lfoType.value = pre.lfo1Type;
     //LFO Mode
     lfoMode.value = pre.lfoMode
+    lfoSpeed.value = pre.lfo1Speed;
     //LFO Depth
-    lfoDepth.value = pre.lfo1Depth.toFixed(2) + "x"
+    lfoDepth.value = parseFloat(pre.lfo1Depth)+ "x"
     //Turn preset object into string and print to text box
     settings.value = JSON.stringify(pre);
 }
-function changeSpeed() {
-    if (hzCheck.checked == true) {
-        pre.lfo1Speed.hz = bpmToHz(lfoSpeed.value)
-        pre.lfo1Speed.bpm = lfoSpeed.value
-        lfoSpeed.value = parseFloat(pre.lfo1Speed.hz).toFixed(3)
-    }
-    else {
-        pre.lfo1Speed.bpm = hzToBpm(lfoSpeed.value)
-        pre.lfo1Speed.hz = lfoSpeed.value
-        lfoSpeed.value = pre.lfo1Speed.bpm
-    }
-}
-lfoSpeed.value = pre.lfo1Speed.hz.toFixed(3)
 function changeValues() {
     pre.osc1Type = oscType.value;
     pre.pitchAttackType = pitchAttackType.value
@@ -204,7 +192,7 @@ function changeValues() {
     pre.f.d[1] = parseFloat(fDT.value);pre.f.d[0] = parseFloat(fDV.value)
     pre.f.s[1] = parseFloat(fST.value);pre.f.s[0] = parseFloat(fSV.value)
     pre.f.r[1] = parseFloat(fRT.value);pre.f.r[0] = parseFloat(fRV.value)
-    pre.fQ = parseFloat(fQ.value);
+    pre.fQ = parseInt(fQ.value);
     pre.v.a[1] = parseFloat(vAT.value);pre.v.a[0] = parseFloat(vAV.value)
     pre.v.d[1] = parseFloat(vDT.value);pre.v.d[0] = parseFloat(vDV.value)
     pre.v.s[1] = parseFloat(vST.value);pre.v.s[0] = parseFloat(vSV.value)
@@ -222,12 +210,14 @@ function changeValues() {
     //LFO Wave Type
     pre.lfo1Type = lfoType.value;
 
+    pre.lfo1Speed = lfoSpeed.value;
+
     //LFO Depth
     pre.lfo1Depth = parseFloat(lfoDepth.value);
     show()
 }
 show()
-
+changeValues()
 
 
 
