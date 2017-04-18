@@ -32,10 +32,17 @@
                 background-color: blue;
                 padding:1vw;
             }
+            #scopeBox {
+                display: inline-block;
+                position: absolute;
+                width: 48vw;
+                height: 100vh;
+                left: 25vw;
+            }
             #rightBox {
                 display: inline-block;
                 position: absolute;
-                left:25vw;
+                right:0;
                 width: 25vw;
                 height: 100%;
                 background-color: cyan;
@@ -88,6 +95,10 @@
             <h1>Volume Release:</h1><br>
             <input id="vRT" size="7" onchange="changeValues()"></input><input disabled id="vRV" size="7" onchange="changeValues()"></input>
         </div>
+
+        <canvas id="scopeBox">
+        </canvas>
+
         <div id="rightBox">
         <h1>LFO:</h1>
         <input id="lfoOnOff" type="checkbox" onchange="changeValues()"></input><br><br>
@@ -116,8 +127,8 @@
                 <option>LFO Depth</option>
                 <option>Volume</option>
                 <option>Filter Frequency</option>
-            </select>
-        <h1>Mod Wheel:</h1>
+            </select><br>
+        <h1>Mod Wheel:</h1><br>
             <select id="modWheel" onchange="changeValues()">
                 <option value="speed">LFO Speed</option>
                 <option value="depth">LFO Depth</option>
@@ -125,7 +136,7 @@
                 <option value="fil">Filter Frequency</option>
                 <option value="pitch">Pitch Bend</option>
             </select><br>
-        <h1>Volume Knob:</h1>
+        <h1>Volume Knob:</h1><br>
             <select>
                 <option>Volume</option>
                 <option>LFO Speed</option>
@@ -144,6 +155,7 @@
     <script src="presets.js"></script>
     <script src="synth.js"></script>
     <script src="keyboardevents.js"></script>
+    <script src="html.js"></script>
     <script>
 
     </script>

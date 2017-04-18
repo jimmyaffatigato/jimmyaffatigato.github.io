@@ -1,8 +1,5 @@
 //midistuff
 
-//Note Frequency Functions
-//Takes the number of half steps above or below A4 (positive or negative) and converts the new note to frequency
-//Optional second argument redefines the frequency of A4 to change overall tuning (e.g. 443)
 function noteFrequency(hs, fixedNote) {
     if (fixedNote == null) {
         fixedNote = 440;
@@ -12,34 +9,11 @@ function noteFrequency(hs, fixedNote) {
     return freq.toFixed(4);
 }
 
-//Takes a MIDI note value (between 0 and 127) and converts it to frequency
-//Optional second argument defines the frequency of A4 (default:440)
 function midiToFreq(midiNote, temp) {
     halfSteps = midiNote - 57
     return noteFrequency(halfSteps, temp)
 }
 
-function midiToNoteName(midiNote) {
-    var name = ""
-    var oct = 0;
-    oct = Math.floor(midiNote / 12) - 1
-    midiNote = midiNote % 12
-    switch (midiNote) {
-        case 0:name = "C";break;
-        case 1:name = "C#/Db";break
-        case 2:name = "D";break;
-        case 3:name = "D#/Eb";break;
-        case 4:name = "E";break;
-        case 5:name = "F";break;
-        case 6:name = "F#/Gb";break;
-        case 7:name = "G";break;
-        case 8:name = "G#/Ab";break;
-        case 9:name = "A";break;
-        case 10:name = "A#/Bb";break;
-        case 11:name = "B";break;
-    }
-    return name+oct;
-}
 var notesOn = [];
 function openMIDI() {
     if (navigator.requestMIDIAccess) {
@@ -47,21 +21,29 @@ function openMIDI() {
             sysex: false
         }).then(midiContext);
     }
-    //I don't really know how this part works
     function midiContext(MIDIAccess) {
         midi = MIDIAccess;
         inputs = []
-        for (h=0;h<9;h++){
-            if (midi.inputs.get(h) != undefined) {
-                var tex = document.createTextNode(midi.inputs.get(h).name)
-                var opt = document.createElement("OPTION")
-                opt.setAttribute("value",h)
-                opt.appendChild(tex)
-                devices.appendChild(opt)
+        var input;
+        if (midi.inputs.size > 0) {
+            for (h=0;h<9;h++){
+                if (midi.inputs.get(h) != undefined) {
+                    var tex = document.createTextNode(midi.inputs.get(h).name)
+                    var opt = document.createElement("OPTION")
+                    opt.setAttribute("value",h)
+                    opt.appendChild(tex)
+                    devices.appendChild(opt)
+                }
             }
+            input = midi.inputs.get(devices.value)
+            input.onmidimessage = onMIDIMessage;
         }
-        var input = midi.inputs.get(devices.value)
-        input.onmidimessage = onMIDIMessage;
+        else {
+            var tex = document.createTextNode("No Device")
+            var opt = document.createElement("OPTION")
+            opt.appendChild(tex);
+            devices.appendChild(opt)
+        }
         }
         //Called when a MIDI message is received
         function onMIDIMessage(event) {
@@ -96,7 +78,7 @@ function openMIDI() {
                             case "pitch":
                                 bend = data[2]/127
                                 for (notes=0;notes<notesOn.length;notes++) {
-                                    notesOn[notes].osc1.frequency.setTargetAtTime(notesOn[notes].freq * (bend + 1), au.currentTime, 0)
+                                    notesOn[notes].osc.frequency.setTargetAtTime(notesOn[notes].freq * (bend + 1), au.currentTime, 0)
                                 }
                                 break;
                             case "speed":

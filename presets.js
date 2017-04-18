@@ -4,7 +4,7 @@ var presets = [
     {
         num:0,
         name:"pre One",
-        osc1Type: "square",
+        oscType: "square",
         //Pitch Envelope
         p: {
             a:[0,0.05],
@@ -29,17 +29,10 @@ var presets = [
         lfo1Type : "square",
     },
     {
-        num:1,
-        //Random preset randomizes each parameter within certain ranges
-        name:"Random",
-        osc1Type: randomWave(),
+        oscType: randomWave(),
         port: randomInt(0,1),
         pitchAttackType: "high",
-        p: {
-            a:[0,(Math.random()*0.1).toFixed(3)],
-            d:[0,0],
-            s:[0,0],
-            r:[0,.5]},
+        p: {a:[0,(Math.random()*0.1).toFixed(3)]},
         f: {
             a:[randomInt(0,10000),(Math.random()*0.25).toFixed(3)],
             d:[randomInt(0,10000),(Math.random()*0.25).toFixed(3)],

@@ -1,5 +1,10 @@
 //Create Audio Context
 var au = new AudioContext();
+var volControl = new GainNode(au)
+volControl.gain.value = 0.8;
+var scope = new AnalyserNode(au)
+volControl.connect(scope)
+scope.connect(au.destination)
 
 
 //Converts Beats Per Minute (BPM) to Hertz (Hz)
@@ -28,17 +33,15 @@ function Voice(note, vel) {
     this.vel = vel/127;
     this.freq = parseFloat(midiToFreq(note))
     
-    this.osc1 = new OscillatorNode(au)
-    this.osc1Gain = new GainNode(au)
-    this.osc1.type = pre.osc1Type;
-    this.osc1Gain.gain.value = this.vel
+    this.osc = new OscillatorNode(au)
+    this.oscGain = new GainNode(au)
+    this.osc.type = pre.oscType;
+    this.oscGain.gain.value = this.vel
     this.filEnv = new BiquadFilterNode(au)
     this.filEnv.type = "lowpass";
     this.filEnv.Q.value = pre.fQ;
     this.volEnv = new GainNode(au)
     this.panner = new StereoPannerNode(au)
-    this.volControl = new GainNode(au)
-    this.volControl.gain.value = 0.8* pre.volControl
 
     //Start Envelope
     this.go = function() {
@@ -50,10 +53,10 @@ function Voice(note, vel) {
         }
 
         var bent = this.freq * (bend + 1)
-        this.osc1.frequency.setTargetAtTime(port, au.currentTime, 0)
+        this.osc.frequency.setTargetAtTime(port, au.currentTime, 0)
         port = this.freq;
         //Pitch Envelope Attack
-        this.osc1.frequency.setTargetAtTime(bent,au.currentTime, pre.p.a[1])
+        this.osc.frequency.setTargetAtTime(bent,au.currentTime, pre.p.a[1])
         //Filter Envelope Initial Value
         this.filEnv.frequency.setTargetAtTime(0, au.currentTime, 0)
         //Filter Envelope Attack
@@ -78,8 +81,8 @@ function Voice(note, vel) {
         //Volume Envelope Release
         this.volEnv.gain.setTargetAtTime(pre.v.r[0],au.currentTime+pre.v.s[1], pre.v.r[1])
         //Stop Oscillator after 4 seconds
-        this.osc1.stop(au.currentTime + 4)
-        this.osc1.onended = function() {delete voice}
+        this.osc.stop(au.currentTime + 4)
+        this.osc.onended = function() {delete voice}
     }
 
     //LFO 1
@@ -91,18 +94,17 @@ function Voice(note, vel) {
     this.lfo1Gain.gain.value = pre.lfo1Depth * depthMult;
 
     //Connections
-    this.osc1.connect(this.osc1Gain);
-    this.osc1Gain.connect(this.filEnv)
+    this.osc.connect(this.oscGain);
+    this.oscGain.connect(this.filEnv)
     this.filEnv.connect(this.volEnv)
     this.volEnv.connect(this.panner)
-    this.panner.connect(this.volControl)
-    this.volControl.connect(au.destination)
+    this.panner.connect(volControl)
 
     this.lfo1.connect(this.lfo1Gain)
     switch (pre.lfoMode) {
         case "vol":
             this.lfo1Gain.gain.value = pre.lfo1Depth
-            this.lfo1Gain.connect(this.osc1Gain.gain);break;
+            this.lfo1Gain.connect(this.oscGain.gain);break;
         case "fil":
             this.lfo1Gain.gain.maxValue = 20000;
             this.lfo1Gain.gain.minValue = 0;
@@ -114,120 +116,15 @@ function Voice(note, vel) {
             this.lfo1Gain.connect(this.panner.pan);break
         case "pitch":
             this.lfo1Gain.gain.value = this.freq * pre.lfo1Depth
-            this.lfo1Gain.connect(this.osc1.frequency)
+            this.lfo1Gain.connect(this.osc.frequency)
             break;
     }
 
-    this.osc1.start()
+    this.osc.start()
     if (pre.lfo1OnOff == 1) {
         this.lfo1.start()
     }
 }
-
-
-//HTML Element Definitions
-var fAT = document.getElementById("fAT")
-var fDT = document.getElementById("fDT")
-var fST = document.getElementById("fST")
-var fRT = document.getElementById("fRT")
-var fAV = document.getElementById("fAV")
-var fDV = document.getElementById("fDV")
-var fSV = document.getElementById("fSV")
-var fRV = document.getElementById("fRV")
-var vAT = document.getElementById("vAT")
-var vDT = document.getElementById("vDT")
-var vST = document.getElementById("vST")
-var vRT = document.getElementById("vRT")
-var vAV = document.getElementById("vAV")
-var vDV = document.getElementById("vDV")
-var vSV = document.getElementById("vSV")
-var vRV = document.getElementById("vRV")
-var lfoOnOff = document.getElementById("lfoOnOff")
-var lfoType = document.getElementById("lfoType")
-var lfoSpeed = document.getElementById("lfoSpeed")
-var lfoDepth = document.getElementById("lfoDepth")
-var settings = document.getElementById("settings")
-var hzCheck = document.getElementById("hzCheck")
-
-//Update HTML
-function show() {
-    //Osc Type
-    oscType.value = pre.osc1Type;
-    //Pitch Attack
-    pAT.value = parseFloat(pre.p.a[1])+"s";
-    pitchAttackType.value = pre.pitchAttackType;
-    //Filter Attack
-    fAT.value = parseFloat(pre.f.a[1])+"s";fAV.value = parseFloat(pre.f.a[0]).toFixed(0) + " Hz"
-    //Filter Decay
-    fDT.value = parseFloat(pre.f.d[1])+"s";fDV.value = parseFloat(pre.f.d[0]).toFixed(0) + " Hz"
-    //Filter Sustain
-    fST.value = parseFloat(pre.f.s[1])+"s";fSV.value = parseFloat(pre.f.s[0]).toFixed(0) + " Hz"
-    //Filter Release
-    fRT.value = parseFloat(pre.f.r[1])+"s";fRV.value = parseFloat(pre.f.r[0]).toFixed(0) + " Hz"
-    //Filter Q
-    fQ.value = pre.fQ;
-    //Volume Attack
-    vAT.value = parseFloat(pre.v.a[1])+"s";vAV.value = parseFloat(pre.v.a[0]).toFixed(1) + "x"
-    //Volume Decay
-    vDT.value = parseFloat(pre.v.d[1])+"s";vDV.value = parseFloat(pre.v.d[0]).toFixed(1) + "x"
-    //Volume Sustain
-    vST.value = parseFloat(pre.v.s[1])+"s";vSV.value = parseFloat(pre.v.s[0]).toFixed(1) + "x"
-    //Volume Release
-    vRT.value = parseFloat(pre.v.r[1])+"s";vRV.value = parseFloat(pre.v.r[0]).toFixed(1) + "x"
-    //LFO Switch
-    lfoOnOff.checked = pre.lfo1OnOff;
-    //LFO Wave Type
-    lfoType.value = pre.lfo1Type;
-    //LFO Mode
-    lfoMode.value = pre.lfoMode
-    //LFO Speed
-    lfoSpeed.value = pre.lfo1Speed + " Hz";
-    //LFO Depth
-    lfoDepth.value = parseFloat(pre.lfo1Depth)+ "x"
-    //Turn preset object into string and print to text box
-    settings.value = JSON.stringify(pre);
-}
-function changeValues() {
-    pre.osc1Type = oscType.value;
-    pre.pitchAttackType = pitchAttackType.value
-    pre.p.a[1] = parseFloat(pAT.value);
-    pre.f.a[1] = parseFloat(fAT.value);pre.f.a[0] = parseFloat(fAV.value)
-    pre.f.d[1] = parseFloat(fDT.value);pre.f.d[0] = parseFloat(fDV.value)
-    pre.f.s[1] = parseFloat(fST.value);pre.f.s[0] = parseFloat(fSV.value)
-    pre.f.r[1] = parseFloat(fRT.value);pre.f.r[0] = parseFloat(fRV.value)
-    pre.fQ = parseInt(fQ.value);
-    pre.v.a[1] = parseFloat(vAT.value);pre.v.a[0] = parseFloat(vAV.value)
-    pre.v.d[1] = parseFloat(vDT.value);pre.v.d[0] = parseFloat(vDV.value)
-    pre.v.s[1] = parseFloat(vST.value);pre.v.s[0] = parseFloat(vSV.value)
-    pre.v.r[1] = parseFloat(vRT.value);pre.v.r[0] = parseFloat(vRV.value)
-    //LFO On/Off
-    if (lfoOnOff.checked == true) {
-        pre.lfo1OnOff = 1
-    }
-    else {
-        pre.lfo1OnOff = 0
-    }
-    //LFO Mode
-    pre.lfoMode = lfoMode.value
-
-    //LFO Wave Type
-    pre.lfo1Type = lfoType.value;
-
-    //LFO Speed
-    pre.lfo1Speed = parseFloat(lfoSpeed.value);
-
-    //LFO Depth
-    pre.lfo1Depth = parseFloat(lfoDepth.value) / depthMult;
-
-    //Mod Wheel Assign
-    pre.modWheel = modWheel.value;
-
-    show()
-}
-show()
-changeValues()
-
-
 
 function loadSettings() {
     pre = JSON.parse(settings.value)
@@ -245,7 +142,3 @@ if (code.length > 0) {
     pre = JSON.parse(code)
     show()
 }
-
-document.body.style.backgroundColor = randomColor();
-leftBox.style.backgroundColor = randomColor();
-rightBox.style.backgroundColor = randomColor();
