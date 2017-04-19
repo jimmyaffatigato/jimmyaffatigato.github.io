@@ -113,5 +113,5 @@ function draw() {
   }
   scopeContext.lineTo(scopeBox.width, scopeBox.height / 2);
   scopeContext.stroke();
-};
+}
 setInterval(function(){draw()},100);
