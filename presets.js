@@ -1,16 +1,8 @@
 //Array of preset objects
-
 var presets = [
     {
-        num:0,
-        name:"pre One",
         oscType: "square",
-        //Pitch Envelope
-        p: {
-            a:[0,0.05],
-            d:[0,0],
-            s:[0,0],
-            r:[0,.5]},
+        p: {a:[0,0.05]},
         f: {
             a:[8000,0.5],
             d:[4000,0.5],
@@ -21,12 +13,11 @@ var presets = [
             d:[0.75,0.5],
             s:[0.7,1],
             r:[0,0.5]},
-        // Envelope values : filter: {attack:[value,time],decay[value,time], ...}
         fQ: 20,
-        lfo1OnOff: 1,
-        lfo1Speed: 0.5,
-        lfo1Depth: 1,
-        lfo1Type : "square",
+        lfoOnOff: 1,
+        lfoSpeed: 0.5,
+        lfoDepth: 1,
+        lfoType : "square",
     },
     {
         oscType: randomWave(),
@@ -44,10 +35,10 @@ var presets = [
             s:[Math.random().toFixed(3),Math.random().toFixed(3)],
             r:[0,(Math.random()*0.25).toFixed(3)]},
         fQ: randomInt(1,25),
-        lfo1OnOff: randomInt(0,1),
-        lfo1Speed: Math.random().toFixed(3) * 10,
-        lfo1Depth: Math.random().toFixed(3),
-        lfo1Type: randomWave(),
+        lfoOnOff: randomInt(0,1),
+        lfoSpeed: Math.random().toFixed(3) * 10,
+        lfoDepth: Math.random().toFixed(3),
+        lfoType: randomWave(),
         lfoMode:"fil",
         modWheel: "depth",
         bendWheel: "pitch",
@@ -78,7 +69,6 @@ var presets = [
         }
     }
 ]
-presets[1].randomize()
-
+presets[1].randomize();
 
 

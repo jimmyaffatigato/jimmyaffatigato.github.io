@@ -12,51 +12,37 @@
                 margin:0;
             }
             h1 {
-                font-size: 18pt;
+                font-size: 16pt;
                 display: inline-block;
             }
             input {
-                font-size: 18pt;
+                font-size: 16pt;
             }
             input[type=checkbox]{
                 transform: scale(1.5)
             }
             select {
-                font-size: 18pt;
+                font-size: 16pt;
             }
             #leftBox {
                 display: inline-block;
                 position: absolute;
-                width: 25vw;
-                height: 100%;
+                width: 23vw;
                 background-color: blue;
                 padding:1vw;
             }
             #scopeBox {
                 display: inline-block;
                 position: absolute;
-                width: 48vw;
-                height: 100vh;
                 left: 25vw;
             }
             #rightBox {
                 display: inline-block;
                 position: absolute;
                 right:0;
-                width: 25vw;
-                height: 100%;
+                width: 24vw;
                 background-color: cyan;
                 padding:1vw;
-            }
-            #settingNames {
-                display: inline-block;
-                left:0;
-                text-align: right;
-            }
-            #settingValues {
-                display: inline-block;
-                right:0;
-                text-align: left;
             }
         </style>
     </head>
@@ -68,7 +54,7 @@
                 <option value="sawtooth">Sawtooth</option>
                 <option value="square">Square</option>
                 <option value="triangle">Triangle</option>
-            </select><br><br>
+            </select>&nbsp;<h1>Noise:&nbsp;</h1><input id="noise" type="checkbox"></input><br><br>
             <h1>Pitch Attack:</h1><br>
             <input id="pAT" size="7" onchange="changeValues()"></input>
             <select id="pitchAttackType" onchange="changeValues()">
@@ -150,13 +136,10 @@
         <textarea rows="6" cols="50" id="settings" style="height:10vw;visibility: hidden" onchange="loadSettings()"></textarea>
         </div>
     </body>
-    <script src="myLibrary.js"></script>
-    <script src="midi.js"></script>
-    <script src="presets.js"></script>
-    <script src="synth.js"></script>
-    <script src="keyboardevents.js"></script>
-    <script src="html.js"></script>
-    <script>
-
-    </script>
+        <script src="myLibrary.js"></script>
+        <script src="midi.js"></script>
+        <script src="presets.js"></script>
+        <script src="synth.js"></script>
+        <script src="keyboardevents.js"></script>
+        <script src="html.js"></script>
 </html>

@@ -1,3 +1,15 @@
+function noteFrequency(hs, fixedNote) {
+    if (fixedNote == null) {
+        fixedNote = 440;
+    }
+    var x = Math.pow(2,(1/12))
+    freq = fixedNote * Math.pow(x, hs)
+    return freq.toFixed(4);
+}
+function midiToFreq(midiNote, temp) {
+    halfSteps = midiNote - 57
+    return noteFrequency(halfSteps, temp)
+}
 function randomColor() {
     return "#"+Math.random().toString(16).slice(-6)
 }
