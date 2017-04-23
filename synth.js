@@ -33,7 +33,7 @@ function Voice(note, vel) {
     }
     var whiteNoise = au.createBufferSource();
     var noiseGain = new GainNode(au)
-    noiseGain.gain.value = 0.2
+    noiseGain.gain.value = 0.1
     whiteNoise.buffer = noiseBuffer;
     whiteNoise.loop = true;
     whiteNoise.start(0);
