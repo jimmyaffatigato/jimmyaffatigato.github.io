@@ -1,145 +1,35 @@
 <html>
     <head>
         <style>
-            @font-face {
-                font-family: futura;
-                src: url(FuturaStd-Book.otf);
-                font-weight:60;
-            }
-            * {
-                font-family: futura;
-                padding:0;
-                margin:0;
-            }
-            h1 {
-                font-size: 16pt;
-                display: inline-block;
-            }
-            input {
-                font-size: 16pt;
-            }
-            input[type=checkbox]{
-                transform: scale(1.5)
-            }
-            select {
-                font-size: 16pt;
-            }
-            #leftBox {
-                display: inline-block;
-                position: absolute;
-                width: 23vw;
-                background-color: blue;
-                padding:1vw;
-            }
-            #scopeBox {
-                display: inline-block;
-                position: absolute;
-                left: 25vw;
-            }
-            #rightBox {
-                display: inline-block;
-                position: absolute;
-                right:0;
-                width: 24vw;
-                background-color: cyan;
-                padding:1vw;
-            }
         </style>
     </head>
     <body>
-        <div id="leftBox">
-            <h1>Wave:</h1><br>
-            <select id="oscType">
-                <option value="sine">Sine</option>
-                <option value="sawtooth">Sawtooth</option>
-                <option value="square">Square</option>
-                <option value="triangle">Triangle</option>
-            </select>&nbsp;<h1>Noise:&nbsp;</h1><input id="noise" type="checkbox"></input><br><br>
-            <h1>Pitch Attack:</h1><br>
-            <input id="pAT" size="7" onchange="changeValues()"></input>
-            <select id="pitchAttackType" onchange="changeValues()">
-                <option value="high">High</option>
-                <option value="low">Low</option>
-                <option value="port">Portamento</option>
-            </select><br><br>
-            <h1>Filter Attack:</h1><br>
-            <input id="fAT" size="7" onchange="changeValues()"></input><input id="fAV" size="7" onchange="changeValues()"></input><br>
-            <h1>Filter Decay:</h1><br>
-            <input id="fDT" size="7" onchange="changeValues()"></input><input id="fDV" size="7" onchange="changeValues()"></input><br>
-            <h1>Filter Sustain:</h1><br>
-            <input id="fST" size="7" onchange="changeValues()"></input><input id="fSV" size="7" onchange="changeValues()"></input><br>
-            <h1>Filter Release:</h1><br>
-            <input id="fRT" size="7" onchange="changeValues()"></input><input id="fRV" size="7" onchange="changeValues()"></input><br>
-            <h1>Filter Q:</h1><br>
-            <input id="fQ" size="7" onchange="changeValues()"></input><br><br>
-            <h1>Volume Attack:</h1><br>
-            <input id="vAT" size="7" onchange="changeValues()"></input><input id="vAV" size="7" onchange="changeValues()"></input><br>
-            <h1>Volume Decay:</h1><br>
-            <input id="vDT" size="7" onchange="changeValues()"></input><input id="vDV" size="7" onchange="changeValues()"></input><br>
-            <h1>Volume Sustain:</h1><br>
-            <input id="vST" size="7" onchange="changeValues()"></input><input id="vSV" size="7" onchange="changeValues()"></input><br>
-            <h1>Volume Release:</h1><br>
-            <input id="vRT" size="7" onchange="changeValues()"></input><input disabled id="vRV" size="7" onchange="changeValues()"></input>
-        </div>
-
-        <canvas id="scopeBox">
-        </canvas>
-
-        <div id="rightBox">
-        <h1>LFO:</h1>
-        <input id="lfoOnOff" type="checkbox" onchange="changeValues()"></input><br><br>
-        <h1>LFO Mode:</h1><br>
-        <select id="lfoMode" onchange="changeValues()">
-            <option value="vol">Volume</option>
-            <option value="fil">Filter</option>
-            <option value="pitch">Pitch</option>
-            <option value="pan">Pan</option>
-        </select><br>
-        <h1>LFO Type:</h1><br>
-        <select id="lfoType" onchange="changeValues()">
-            <option value="sine">Sine</option>
-            <option value="sawtooth">Sawtooth</option>
-            <option value="square">Square</option>
-            <option value="triangle">Triangle</option>
-        </select><br>
-        <h1>LFO Speed:</h1><br>
-        <input size="7" id="lfoSpeed" onchange="changeValues()"></input><br>
-        <h1>LFO Depth:</h1><br>
-        <input size="7" id="lfoDepth" onchange="changeValues()"></input><br><br>
-        <h1>Pitch Wheel:</h1><br>
-            <select>
-                <option>Pitch Bend</option>
-                <option>LFO Speed</option>
-                <option>LFO Depth</option>
-                <option>Volume</option>
-                <option>Filter Frequency</option>
-            </select><br>
-        <h1>Mod Wheel:</h1><br>
-            <select id="modWheel" onchange="changeValues()">
-                <option value="speed">LFO Speed</option>
-                <option value="depth">LFO Depth</option>
-                <option value="vol">Volume</option>
-                <option value="fil">Filter Frequency</option>
-                <option value="pitch">Pitch Bend</option>
-            </select><br>
-        <h1>Volume Knob:</h1><br>
-            <select>
-                <option>Volume</option>
-                <option>LFO Speed</option>
-                <option>LFO Depth</option>
-                <option>Filter Frequency</option>
-                <option>Pitch Bend</option>
-            </select><br><br>
-        <h1>Device:</h1><br>
-            <select id="devices">
-            </select>
-        <textarea rows="6" cols="50" id="settings" style="height:10vw;visibility: hidden" onchange="loadSettings()"></textarea>
-        </div>
     </body>
-        <script src="myLibrary.js"></script>
-        <script src="midi.js"></script>
-        <script src="presets.js"></script>
-        <script src="synth.js"></script>
-        <script src="keyboardevents.js"></script>
-        <script src="html.js"></script>
+    <script>
+        var au = new AudioContext();
+        var osc1 = new OscillatorNode(au);
+        osc1.type = "sawtooth";
+        var fil1 = new BiquadFilterNode(au);
+        osc1.connect(fil1);
+        fil1.connect(au.destination);
+        osc1.start();
+        var mx, my;
+        /*
+        window.onmousemove = function() {
+            mx = event.clientX;
+            my = event.clientY;
+            console.log(mx)
+            osc1.frequency.value = 65 + mx;
+            fil1.frequency.value = my * 10;
+        }
+        */
+        window.addEventListener("deviceorientation", handleOrientation, true);
+        function handleOrientation(e) {
+            var absolute = e.absolute;
+            var alpha = e.alpha;
+            var beta = e.beta;
+            var gamma = e.gamma;
+        }
+
+    </script>
 </html>
