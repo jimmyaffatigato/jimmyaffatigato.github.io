@@ -30,7 +30,7 @@
             var beta = e.beta;
             var gamma = e.gamma;
             var accel = e.acceleration;
-            osc1.frequency.value = 440 + beta * 4 * accel;
+            osc1.frequency.value = 440 + beta * 4 * e.rotationRate.beta;
         }
 
     </script>
