@@ -4,25 +4,25 @@
         </style>
     </head>
     <body>
+        <input type="button" onclick="go()" value="GO"></input>
+        <input type="button" onclick="dont()" value="DON'T"></input>
+        <p id="pitch"></p>
+        <p id="roll"></p>    
     </body>
     <script>
+        var pitch = document.getElementById("pitch")
+        var roll = document.getElementById("roll")
+
         var au = new AudioContext();
         var osc1 = new OscillatorNode(au);
         osc1.type = "sawtooth";
         var fil1 = new BiquadFilterNode(au);
+        var gain1 = new GainNode(au);
         osc1.connect(fil1);
-        fil1.connect(au.destination);
+        fil1.connect(gain1);
+        gain1.connect(au.destination);
         osc1.start();
-        var mx, my;
-        /*
-        window.onmousemove = function() {
-            mx = event.clientX;
-            my = event.clientY;
-            console.log(mx)
-            osc1.frequency.value = 65 + mx;
-            fil1.frequency.value = my * 10;
-        }
-        */
+
         window.addEventListener("deviceorientation", handleOrientation, true);
         function handleOrientation(e) {
             var absolute = e.absolute;
@@ -32,6 +32,15 @@
             var accel = e.acceleration;
             osc1.frequency.value = 440 + beta;
             fil1.frequency.value = gamma * 100;
+            pitch.innerHTML = "pitch: " + beta + " (" + osc1.frequency.value + "Hz)"
+            roll.innerHTML = "roll: " + gamma + " (" + fil1.frequency.value + "Hz)"
+        }
+
+        function go() {
+            gain1.gain.value = 1;
+        }
+        function dont() {
+            gain1.gain.value = 0;
         }
 
     </script>
