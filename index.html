@@ -29,7 +29,8 @@
             var alpha = e.alpha;
             var beta = e.beta;
             var gamma = e.gamma;
-            osc1.frequency.value = 440 + beta;
+            var accel = e.acceleration;
+            osc1.frequency.value = 440 + beta * 4 * accel;
         }
 
     </script>
