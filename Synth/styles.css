@@ -1,0 +1,46 @@
+@font-face {
+    font-family: futura;
+    src: url(font.otf);
+    font-weight: 60;
+}
+* {
+    font-family: futura;
+    padding: 0;
+    margin: 0;
+}
+body {
+    overflow: hidden;
+}
+h1 {
+    font-size: 16pt;
+    display: inline-block;
+}
+input {
+    font-size: 16pt;
+}
+input[type="checkbox"] {
+    transform: scale(1.5);
+}
+select {
+    font-size: 16pt;
+}
+.synth {
+    display: flex;
+    flex-direction: row;
+}
+.column {
+    display: flex;
+    padding: 0.5vw;
+    flex-direction: column;
+    border-style: outset;
+    border-color: white;
+    width: 25vw;
+    height: 100vh;
+    resize: horizontal;
+    align-items: center;
+}
+.oscilloscope {
+    display: block;
+    width: 50vw;
+    height: 100vh;
+}
